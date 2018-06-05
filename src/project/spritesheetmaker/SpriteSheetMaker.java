@@ -58,7 +58,7 @@ public class SpriteSheetMaker {
 				reader = new JsonReader(new FileReader(settingsFile));
 				SheetData sheetData = gson.fromJson(reader, SheetData.class);
 				SpriteSheet spriteSheet = new SpriteSheet(sheetData);
-				spriteSheet.make(new File("C:/Users/vythi/Desktop/testing.png"));
+				spriteSheet.make();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
