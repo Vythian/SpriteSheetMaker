@@ -37,7 +37,7 @@ public class SpriteSheetMaker {
 			settingsFile = new File(arg);
 			if(!settingsFile.exists())
 			{
-				LoggingUtils.outputError(String.format("Could not find file at path '%s'", arg), true);
+				LoggingUtils.outputError(String.format("Could not find settings file at path '%s'", arg), true);
 			}
 		}
 		
