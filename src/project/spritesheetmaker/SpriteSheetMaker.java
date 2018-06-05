@@ -1,7 +1,15 @@
 package project.spritesheetmaker;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.HashMap;
 
+import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
+
+import project.spritesheetmaker.sprite.SheetData;
+import project.spritesheetmaker.sprite.SpriteSheet;
 import project.spritesheetmaker.utility.LoggingUtils;
 
 public class SpriteSheetMaker {
@@ -10,7 +18,7 @@ public class SpriteSheetMaker {
 	private boolean headless = false;
 	
 	private HashMap<String, String> argMap;
-	private int filterColor = 11780472;
+	private File settingsFile;
 	
 	public SpriteSheetMaker()
 	{
@@ -23,19 +31,13 @@ public class SpriteSheetMaker {
 		argMap = arguements;
 		
 		// Loads filter color argument if it exists.
-		if(argMap.containsKey("--filtercolor"))
+		if(argMap.containsKey("--settings"))
 		{
-			String arg = argMap.get("--filtercolor");
-			try
+			String arg = argMap.get("--settings");
+			settingsFile = new File(arg);
+			if(!settingsFile.exists())
 			{
-				filterColor = Integer.parseInt(arg);
-			} catch(Exception exception)
-			{
-				LoggingUtils.outputError(String.format("'%s' is not a number, for filtercolor arguement.", arg), debugMode);
-				if(debugMode)
-				{
-					exception.printStackTrace();
-				}
+				LoggingUtils.outputError(String.format("Could not find file at path '%s'", arg), true);
 			}
 		}
 		
@@ -45,7 +47,22 @@ public class SpriteSheetMaker {
 	public void Initialization()
 	{
 		
-		
+		if(!headless)
+		{
+			// Launch GUI
+		} else
+		{
+			Gson gson = new Gson();
+			JsonReader reader;
+			try {
+				reader = new JsonReader(new FileReader(settingsFile));
+				SheetData sheetData = gson.fromJson(reader, SheetData.class);
+				SpriteSheet spriteSheet = new SpriteSheet(sheetData);
+				spriteSheet.make(new File("C:/Users/vythi/Desktop/testing.png"));
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
 		
 		postInitialization();
 	}
